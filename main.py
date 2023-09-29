@@ -1,4 +1,5 @@
 import sys
+from PyQt6.QtCore import Qt
 import sqlite3
 from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtWidgets import (QApplication, QWidget, QLabel, QPushButton, QLineEdit, QGridLayout, QComboBox, QMainWindow,
@@ -233,16 +234,23 @@ class SearchDialog(QDialog):
 
         layout = QVBoxLayout()
 
-        name = QLineEdit()
-        name.setPlaceholderText("Name")
+        self.student_name = QLineEdit()
+        self.student_name.setPlaceholderText("Name")
 
         search = QPushButton("Search")
+        search.clicked.connect(self.search)
 
-        layout.addWidget(name)
+        layout.addWidget(self.student_name)
         layout.addWidget(search)
 
         self.setLayout(layout)
-
+    def search(self):
+        student_name=self.student_name.text()
+        main_window.table.clearSelection()
+        items = main_window.table.findItems(student_name,Qt.MatchFlag.MatchFixedString)
+        for item in items:
+            main_window.table.item(item.row(),1).setSelected(True)
+        self.close()
 
 class InsertDialog(QDialog):
     def __init__(self):
